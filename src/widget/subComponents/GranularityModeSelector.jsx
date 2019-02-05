@@ -62,115 +62,84 @@ export default class GranularityModeSelector extends React.Component {
     return onChange && onChange(value);
   }
 
-  getLowGranularityOptions() {
-    const { options } = this.props;
-    const minGranularity = options.availableGranularities || 'From Second';
-    let granularityOptions = [];
+  // getLowGranularityOptions() {
+  //   const { options } = this.props;
+  //   const minGranularity = options.availableGranularities || 'From Second';
+  //   let granularityOptions = [];
 
-    switch (minGranularity) {
-      case 'From Second':
-      case 'From Minute':
-        granularityOptions = ['1 Min', '15 Min', '1 Hour', '1 Day'];
-        break;
-      case 'From Hour':
-        granularityOptions = ['1 Hour', '1 Day'];
-        break;
-      default:
-      // do nothing
-    }
-    return granularityOptions;
-  }
+  //   switch (minGranularity) {
+  //     case 'From Second':
+  //     case 'From Minute':
+  //       granularityOptions = ['1 Min', '15 Min', '1 Hour', '1 Day'];
+  //       break;
+  //     case 'From Hour':
+  //       granularityOptions = ['1 Hour', '1 Day'];
+  //       break;
+  //     default:
+  //     // do nothing
+  //   }
+  //   return granularityOptions;
+  // }
 
-  getHighGranularityOptions() {
-    const { options } = this.props;
-    const minGranularity = options.availableGranularities || 'From Second';
-    let granularityOptions = [];
+  // getHighGranularityOptions() {
+  //   const { options } = this.props;
+  //   const minGranularity = options.availableGranularities || 'From Second';
+  //   let granularityOptions = [];
 
-    switch (minGranularity) {
-      case 'From Second':
-      case 'From Minute':
-      case 'From Hour':
-      case 'From Day':
-        granularityOptions = [
-          '1 Day',
-          '7 Days',
-          '1 Month',
-          '3 Months',
-          '6 Months',
-          '1 Year',
-        ];
-        break;
-      case 'From Month':
-        granularityOptions = ['1 Month', '3 Months', '6 Months', '1 Year'];
-        break;
-      case 'From Year':
-        granularityOptions = ['1 Year'];
-        break;
-      default:
-      // do nothing
-    }
-    return granularityOptions;
-  }
+  //   switch (minGranularity) {
+  //     case 'From Second':
+  //     case 'From Minute':
+  //     case 'From Hour':
+  //     case 'From Day':
+  //       granularityOptions = [
+  //         '1 Day',
+  //         '7 Days',
+  //         '1 Month',
+  //         '3 Months',
+  //         '6 Months',
+  //         '1 Year',
+  //       ];
+  //       break;
+  //     case 'From Month':
+  //       granularityOptions = ['1 Month', '3 Months', '6 Months', '1 Year'];
+  //       break;
+  //     case 'From Year':
+  //       granularityOptions = ['1 Year'];
+  //       break;
+  //     default:
+  //     // do nothing
+  //   }
+  //   return granularityOptions;
+  // }
 
-  getCustomSelectButton() {
-    const {
- getDateTimeRangeInfo, options, onChangeCustom, theme 
-} = this.props;
-    const { open, anchorEl } = this.state;
-    const selectedTimeRange = getDateTimeRangeInfo().tr || '';
-    const customButton =      selectedTimeRange === 'custom' ? (
-        <FlatButton
-          onClick={this.handleClick}
-          label="Custom"
-          style={{
-            borderBottom:
-              theme.name === 'dark' ? '1px solid red' : '1px solid gray',
-          }}
-        />
-      ) : (
-        <FlatButton
-          onClick={this.handleClick}
-          label="Custom"
-          style={{ borderBottom: 'none' }}
-        />
-      );
-    return (
-      <div style={{ display: 'inline' }}>
-        {customButton}
-        <Popover
-          open={open}
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            horizontal: 'left',
-            vertical: 'bottom',
-          }}
-          targetOrigin={{
-            horizontal: 'left',
-            vertical: 'top',
-          }}
-          onRequestClose={this.handleRequestClose}
-          style={{ maxWidth: 560 }}
-        >
-          <Menu style={{ maxWidth: 560 }}>
-            <div
-              style={{
-                paddingLeft: 15,
-                paddingRight: 15,
-                paddingBottom: 15,
-              }}
-            >
-              <CustomTimeRangeSelector
-                options={options}
-                handleClose={this.handleRequestClose}
-                onChangeCustom={onChangeCustom}
-                theme={theme}
-              />
-            </div>
-          </Menu>
-        </Popover>
-      </div>
-    );
-  }
+  // getCustomSelectButton() {
+  //   const {
+  //     getDateTimeRangeInfo, options, onChangeCustom, theme
+  //   } = this.props;
+  //   const { open, anchorEl } = this.state;
+  //   const selectedTimeRange = getDateTimeRangeInfo().tr || '';
+  //   const customButton = selectedTimeRange === 'custom' ? (
+  //     <FlatButton
+  //       onClick={this.handleClick}
+  //       label="Custom"
+  //       style={{
+  //         borderBottom:
+  //           theme.name === 'dark' ? '1px solid red' : '1px solid gray',
+  //       }}
+  //     />
+  //   ) : (
+  //       <FlatButton
+  //         onClick={this.handleClick}
+  //         label="Custom"
+  //         style={{ borderBottom: 'none' }}
+  //       />
+  //     );
+  //   return (
+  //     <div style={{ display: 'inline' }}>
+  //       {customButton}
+  //     </div>
+  //   );
+  // }
 
   getSelectedGranularityLevel() {
     const {
@@ -197,71 +166,71 @@ export default class GranularityModeSelector extends React.Component {
     }
   }
 
-  handleClick(event) {
-    event.preventDefault();
-    console.log('custom clicked');
+  // handleClick(event) {
+  //   event.preventDefault();
+  //   console.log('custom clicked');
 
-    this.setState({
-      open: true,
-      anchorEl: event.currentTarget,
-    });
-    this.onGranularityModeChange('custom');
-  }
+  //   this.setState({
+  //     open: true,
+  //     anchorEl: event.currentTarget,
+  //   });
+  //   this.onGranularityModeChange('custom');
+  // }
 
-  handleRequestClose() {
-    this.setState({
-      open: false,
-    });
-  }
+  // handleRequestClose() {
+  //   this.setState({
+  //     open: false,
+  //   });
+  // }
 
-  generateRightArrow() {
-    if (this.getHighGranularityOptions().length > 0) {
-      return (
-        <IconButton
-          style={{
-            marginRight: 5,
-            verticalAlign: "middle"
-          }}
-          onClick={this.switchGranularity}
-        >
-          <HardwareKeyboardArrowRight />
-        </IconButton>
-      );
-    } 
-      return "";
-    
-  }
+  // generateRightArrow() {
+  //   if (this.getHighGranularityOptions().length > 0) {
+  //     return (
+  //       <IconButton
+  //         style={{
+  //           marginRight: 5,
+  //           verticalAlign: "middle"
+  //         }}
+  //         onClick={this.switchGranularity}
+  //       >
+  //         <HardwareKeyboardArrowRight />
+  //       </IconButton>
+  //     );
+  //   }
+  //   return "";
 
-  generateLeftArrow() {
-    if (this.getLowGranularityOptions().length > 0) {
-      return (
-        <IconButton
-          style={{
-            marginRight: 5,
-            verticalAlign: "middle"
-          }}
-          onClick={this.switchGranularity}
-        >
-          <HardwareKeyboardArrowLeft />
-        </IconButton>
-      );
-    } 
-      return "";
-    
-  }
+  // }
 
-  generateGranularityModeSwitchButton(granularityMode) {
-    return granularityMode === 'low'
-      ? this.generateRightArrow()
-      : this.generateLeftArrow();
-  }
+  // generateLeftArrow() {
+  //   if (this.getLowGranularityOptions().length > 0) {
+  //     return (
+  //       <IconButton
+  //         style={{
+  //           marginRight: 5,
+  //           verticalAlign: "middle"
+  //         }}
+  //         onClick={this.switchGranularity}
+  //       >
+  //         <HardwareKeyboardArrowLeft />
+  //       </IconButton>
+  //     );
+  //   }
+  //   return "";
+
+  // }
+
+  // generateGranularityModeSwitchButton(granularityMode) {
+  //   return granularityMode === 'low'
+  //     ? this.generateRightArrow()
+  //     : this.generateLeftArrow();
+  // }
 
   generateTabs(granularityMode) {
     const { getTimeRangeName, getDateTimeRangeInfo, theme } = this.props;
     const selectedTimeRange = getTimeRangeName(getDateTimeRangeInfo().tr) || '';
-    const options =      granularityMode === 'high'
-        ? this.getHighGranularityOptions()
-        : this.getLowGranularityOptions();
+    const options = granularityMode === 'high'
+      ? this.getHighGranularityOptions()
+      : this.getLowGranularityOptions();
     return options.map((option) => {
       if (selectedTimeRange === option) {
         return (
@@ -286,12 +255,12 @@ export default class GranularityModeSelector extends React.Component {
     });
   }
 
-  switchGranularity() {
-    const { granularityMode } = this.state;
-    this.setState({
-      granularityMode: granularityMode === 'low' ? 'high' : 'low',
-    });
-  }
+  // switchGranularity() {
+  //   const { granularityMode } = this.state;
+  //   this.setState({
+  //     granularityMode: granularityMode === 'low' ? 'high' : 'low',
+  //   });
+  // }
 
   render() {
     const { granularityMode } = this.state;
@@ -299,10 +268,9 @@ export default class GranularityModeSelector extends React.Component {
     return (
       <div>
         <div>
-          <span style={{ marginRight: 10 }}>Last :</span>
           {this.generateTabs(granularityMode)}
-          {this.generateGranularityModeSwitchButton(granularityMode)}
-          {this.getCustomSelectButton()}
+          {/* {this.generateGranularityModeSwitchButton(granularityMode)} */}
+          {/* {this.getCustomSelectButton()} */}
         </div>
       </div>
     );

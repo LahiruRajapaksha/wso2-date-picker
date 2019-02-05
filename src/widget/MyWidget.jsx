@@ -20,8 +20,8 @@
 import React from "react";
 // import Widget from "@wso2-dashboards/widget";
 import FlatButton from "material-ui/FlatButton";
-import MenuItem from "material-ui/MenuItem";
-import SelectField from "material-ui/SelectField";
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import {
   NotificationSync,
@@ -33,9 +33,11 @@ import JssProvider from "react-jss/lib/JssProvider";
 import { Snackbar } from "material-ui";
 import { oldDark, oldLight } from "../theme/Theme";
 import Widget from "../../mocking/Widget";
-import GranularityModeSelector from "./subComponents/GranularityModeSelector";
-
+import DateRange from '@material-ui/icons/DateRange'
 import widgetConf from "../../resources/widgetConf.json";
+import { red, grey } from "@material-ui/core/colors";
+import { Button } from "@material-ui/core";
+import DateTimePopper from "./subComponents/DateTimePopper";
 
 // This is the workaround suggested in https://github.com/marmelab/react-admin/issues/1782
 const escapeRegex = /([[\].#*$><+~=|^:(),"'`\s])/g;
@@ -66,7 +68,7 @@ export const generateClassName = (rule, styleSheet) => {
 export default class MyWidget extends Widget {
   constructor(props) {
     super(props);
-    console.log("glContainer", props.glContainer);
+    console.log('props', props)
 
     this.state = {
       id: props.widgetID ? "123" : props.widgetID,
@@ -74,7 +76,7 @@ export default class MyWidget extends Widget {
       // width: '450px',
       height: props.glContainer.height,
       // height: '450px',
-      granularityMode: null,
+      granularityMode: "1 Month",
       granularityValue: "",
       options: props.configs ? props.configs.options : "",
       enableSync: false,
@@ -84,7 +86,8 @@ export default class MyWidget extends Widget {
         vertical: "bottom",
         horizontal: "center",
         message: ""
-      }
+      },
+      anchorEl: null,
     };
 
     this.publishTimeRange = this.publishTimeRange.bind(this);
@@ -171,6 +174,7 @@ export default class MyWidget extends Widget {
   }
 
   publishTimeRange(message) {
+    console.log('message', message)
     super.publish(message);
     this.snackBarPreview(message);
   }
@@ -182,7 +186,7 @@ export default class MyWidget extends Widget {
   handleGranularityChange(mode) {
     this.clearRefreshInterval();
     let granularity = "";
-
+    console.log('mode', mode)
     if (mode !== "custom") {
       const startTimeAndGranularity = this.getStartTimeAndGranularity(mode);
       granularity = this.verifyDefaultGranularityOfTimeRange(
@@ -654,24 +658,15 @@ export default class MyWidget extends Widget {
         styleWrapper = { backgroundColor: "#ffffff", color: "black" };
       }
     }
+
     return (
       <JssProvider generateClassName={generateClassName}>
         <div style={styleWrapper}>
           <MuiThemeProvider muiTheme={this.props.muiTheme}>
             {this.renderSnackBar()}
             <Scrollbars style={{ width, height }}>
-              <div style={{ paddingLeft: 15 }}>
-                <GranularityModeSelector
-                  onChange={this.handleGranularityChange}
-                  onChangeCustom={this.handleGranularityChangeForCustom}
-                  options={this.state.options}
-                  getTimeRangeName={this.getTimeRangeName}
-                  getDateTimeRangeInfo={this.getDateTimeRangeInfo}
-                  getDefaultTimeRange={this.getDefaultTimeRange}
-                  theme={this.props.muiTheme}
-                  width={width}
-                  height={height}
-                />
+              <div style={{ paddingLeft: 15, float: "right" }}>
+                {this.getCustomRangePopover()}
                 {this.getTimeIntervalDescriptor(granularityMode)}
               </div>
             </Scrollbars>
@@ -680,7 +675,37 @@ export default class MyWidget extends Widget {
       </JssProvider>
     );
   }
+  popoverHandler = (event) => {
+    this.setState({
+      anchorEl: event.currentTarget,
+    });
+  }
+  popoverClose = () => {
+    this.setState({
+      anchorEl: null,
+    });
+  }
+  getCustomRangePopover() {
+    const open = Boolean(this.state.anchorEl);
+    const { anchorEl } = this.state;
+    console.log('open', open)
+    if (open) {
+      return (
+        <DateTimePopper
+          onClose={this.popoverClose}
+          anchorEl={anchorEl}
+          open={open}
+          options={this.state.options}
+          onChangeCustom={this.handleGranularityChangeForCustom}
+          getDateTimeRangeInfo={this.getDateTimeRangeInfo}
+          getTimeRangeName={this.getTimeRangeName}
+          getDefaultTimeRange={this.getDefaultTimeRange}
+          savingPickedGranularity={this.savingPickedGranularity}
+        />
+      )
+    }
 
+  }
   getTimeIntervalDescriptor(granularityMode) {
     let startAndEnd = {
       startTime: null,
@@ -706,6 +731,8 @@ export default class MyWidget extends Widget {
     }
 
     const { startTime, endTime } = startAndEnd;
+    console.log('startTime', startTime)
+    console.log('endTime', endTime)
     if (granularityMode && startTime && endTime) {
       this.setQueryParamToURL(
         granularityMode.replace(" ", "").toLowerCase(),
@@ -719,23 +746,31 @@ export default class MyWidget extends Widget {
           style={{
             display: "flex",
             alignContent: "center",
-            width: "100%"
+            width: "100%",
+            padding: "2px 2px",
+            backgroundColor: "grey"
           }}
         >
           <div
             style={{
               lineHeight: 3,
-              verticalAlign: "middle"
+              verticalAlign: "middle",
             }}
           >
-            {`${startTime}`}
-            <span style={{ color: "#828282" }}> to </span>
-            {`${endTime}`}
-            <span style={{ color: "#828282" }}> per </span>
+            <Button
+              // aria-owns={open ? "popper" : undefined}
+              onClick={this.popoverHandler}
+              style={{ color: 'white  ' }}
+            >
+              <DateRange />
+              {` ${startTime} `}
+              <span style={{ color: 'white' }}>  to  </span>
+              {`${endTime}`}
+            </Button>
           </div>
           {this.generateGranularitySelector()}
           <FlatButton
-            label="Auto-Sync"
+            label="Refresh every"
             icon={this.state.btnType}
             onClick={this.autoSyncClick}
             style={{
@@ -757,50 +792,50 @@ export default class MyWidget extends Widget {
       case "1 Min":
         startTime = Moment()
           .subtract(1, "minutes")
-          .format("YYYY-MMM-DD hh:mm A");
-        endTime = Moment().format("YYYY-MMM-DD hh:mm A");
+          .format("YYYY-MMMM-DD hh:mm A");
+        endTime = Moment().format("YYYY-MMMM-DD hh:mm A");
         break;
       case "15 Min":
         startTime = Moment()
           .subtract(15, "minutes")
-          .format("YYYY-MMM-DD hh:mm A");
-        endTime = Moment().format("YYYY-MMM-DD hh:mm A");
+          .format("YYYY-MMMM-DD hh:mm A");
+        endTime = Moment().format("YYYY-MMMM-DD hh:mm A");
         break;
       case "1 Hour":
         startTime = Moment()
           .subtract(1, "hours")
-          .format("YYYY-MMM-DD hh:mm A");
-        endTime = Moment().format("YYYY-MMM-DD hh:mm A");
+          .format("YYYY-MMMM-DD hh:mm A");
+        endTime = Moment().format("YYYY-MMMM-DD hh:mm A");
         break;
       case "1 Day":
         startTime = Moment()
           .subtract(1, "days")
-          .format("YYYY-MMM-DD");
-        endTime = Moment().format("YYYY-MMM-DD");
+          .format("YYYY-MMMM-DD");
+        endTime = Moment().format("YYYY-MMMM-DD");
         break;
       case "7 Days":
         startTime = Moment()
           .subtract(7, "days")
-          .format("YYYY-MMM-DD");
-        endTime = Moment().format("YYYY-MMM-DD");
+          .format("YYYY-MMMM-DD");
+        endTime = Moment().format("YYYY-MMMM-DD");
         break;
       case "1 Month":
         startTime = Moment()
           .subtract(1, "months")
-          .format("YYYY-MMM");
-        endTime = Moment().format("YYYY-MMM");
+          .format("YYYY-MMMM");
+        endTime = Moment().format("YYYY-MMMM");
         break;
       case "3 Months":
         startTime = Moment()
           .subtract(3, "months")
-          .format("YYYY-MMM");
-        endTime = Moment().format("YYYY-MMM");
+          .format("YYYY-MMMM");
+        endTime = Moment().format("YYYY-MMMM");
         break;
       case "6 Months":
         startTime = Moment()
           .subtract(6, "months")
-          .format("YYYY-MMM");
-        endTime = Moment().format("YYYY-MMM");
+          .format("YYYY-MMMM");
+        endTime = Moment().format("YYYY-MMMM");
         break;
       case "1 Year":
         startTime = Moment()
@@ -816,9 +851,9 @@ export default class MyWidget extends Widget {
 
   generateGranularitySelector() {
     return (
-      <SelectField
+      <Select
         value={this.getDefaultSelectedOption()}
-        onChange={(event, index, value) => {
+        onChange={(event) => {
           this.setQueryParamToURL(
             this.state.granularityMode.replace(" ", "").toLowerCase(),
             this.timestampToDateFormat(
@@ -829,15 +864,15 @@ export default class MyWidget extends Widget {
               this.state.endTime.getTime(),
               this.state.granularityMode
             ).toLowerCase(),
-            value,
+            event.target.value,
             this.state.enableSync
           );
-          this.OnChangeOfSelectField(value);
+          this.OnChangeOfSelectField(event.target.value);
         }}
         style={{ marginLeft: 10 }}
       >
         {this.generateGranularityMenuItems()}
-      </SelectField>
+      </Select>
     );
   }
 
@@ -864,7 +899,8 @@ export default class MyWidget extends Widget {
     );
   }
 
-  OnChangeOfSelectField(value) {
+  OnChangeOfSelectField = (value) => {
+    console.log('value', value)
     if (this.state.granularityMode === "custom") {
       this.onChangeForCustomTimeRange(value);
     } else {
@@ -878,7 +914,10 @@ export default class MyWidget extends Widget {
         this.state.granularityValue
       );
     }
-    return this.state.granularityValue;
+    const { granularityMode } = this.state
+    let defaultSelectedGranularity = this.getSupportedGranularitiesForFixed(granularityMode);
+    console.log('defaultSelectedGranularity', defaultSelectedGranularity)
+    return defaultSelectedGranularity[defaultSelectedGranularity.length - 2].toLowerCase()
   }
 
   verifySelectedGranularityForCustom(granularity) {
@@ -915,7 +954,13 @@ export default class MyWidget extends Widget {
     this.setState({ granularityValue: value });
   }
 
+  savingPickedGranularity = (granularityMode) => {
+    this.handleGranularityChange(granularityMode);
+    this.setState({ granularityMode })
+  }
+
   generateGranularityMenuItems() {
+    const { granularityMode } = this.state
     let supportedGranularities = [];
     if (this.state.granularityMode === "custom") {
       supportedGranularities = this.getSupportedGranularitiesForCustom(
@@ -923,18 +968,18 @@ export default class MyWidget extends Widget {
         this.state.endTime
       );
     } else {
-      supportedGranularities = this.getSupportedGranularitiesForFixed(
-        this.state.granularityMode
-      );
+      supportedGranularities = this.getSupportedGranularitiesForFixed(granularityMode);
+    }
+    return this.getAvailableGranularities().map((view, key) => {
+      return < MenuItem
+        key={key}
+        value={view.toLowerCase()}
+        disabled={supportedGranularities.indexOf(view) === -1}
+      >{view}
+      </MenuItem>
     }
 
-    return this.getAvailableGranularities().map(view => (
-      <MenuItem
-        value={view.toLowerCase()}
-        primaryText={view}
-        disabled={supportedGranularities.indexOf(view) === -1}
-      />
-    ));
+    );
   }
 
   capitalizeCaseFirstChar(str) {
@@ -1027,6 +1072,7 @@ export default class MyWidget extends Widget {
   }
 
   getSupportedGranularitiesForFixed(granularityMode) {
+    console.log('granularityMode', granularityMode)
     let supportedGranularities = [];
     switch (granularityMode) {
       case "1 Min":

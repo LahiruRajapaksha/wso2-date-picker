@@ -46,10 +46,10 @@ const PublisherEventStack = ({ eventStack }) => {
         const e = JSON.parse(JSON.stringify(event));
         return (
           <TableRow key={index}>
-            <TableCell align="center" style={styles.tableCell}>
+            <TableCell align="right" style={styles.tableCell}>
               {e.granularity}
             </TableCell>
-            <TableCell align="left" style={styles.tableCell}>
+            <TableCell align="right" style={styles.tableCell}>
               {moment(e.from, 'x').format('YYYY-MM-DD HH:mm:ss')}
             </TableCell>
             <TableCell align="right" style={styles.tableCell}>

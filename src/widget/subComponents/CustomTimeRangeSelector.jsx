@@ -18,10 +18,10 @@
  */
 
 import React from 'react';
-import { MenuItem, SelectField, RaisedButton } from 'material-ui';
+import { MenuItem } from '@material-ui/core/MenuItem';
 import Moment from "moment";
-import DateTimePicker from "./DateTimePicker";
-
+import { Grid } from '@material-ui/core';
+import Calendar from 'react-calendar';
 export default class CustomTimeRangeSelector extends React.Component {
   constructor(props) {
     super(props);
@@ -140,80 +140,70 @@ export default class CustomTimeRangeSelector extends React.Component {
     onChangeCustom('custom', this.startTime, this.endTime, inputType);
   }
 
+  const
   render() {
     const { inputType } = this.state;
     const { theme } = this.props;
     return (
-      <div style={{ marginTop: 10 }}>
-        <div style={{ marginBottom: 10 }}>
-          Per
-          <br />
-          <SelectField
-            className="perUnderline"
-            value={inputType}
-            onChange={(event, index, value) => {
-              this.setState({ inputType: value });
-            }}
-          >
-            {this.generateGranularityMenuItems()}
-          </SelectField>
-        </div>
-        <div style={{ display: 'flex' }}>
-          <div
-            style={{
-              width: '50%',
-              float: 'left',
-            }}
-          >
-            From
-            <br />
-            <DateTimePicker
-              onChange={this.handleStartTimeChange}
-              inputType={inputType}
-              theme={theme}
-              initTime={Moment().subtract(1, 'days')}
-              inputName="startTime"
+      <div style={{ fontSize: 13 }}>
+        <Grid container xs={12}>
+          <Grid item xs={6}>
+            <Calendar selectRange='true'
+              maxDetail="month"
+              minDetail="decade"
             />
-          </div>
-          <div
-            style={{
-              width: '50%',
-              float: 'right',
-            }}
-          >
-            To
-            <br />
-            <DateTimePicker
-              onChange={this.handleEndTimeChange}
-              inputType={inputType}
-              theme={theme}
-              initTime={Moment()}
-              inputName="endTime"
-              startTime={this.startTime}
+          </Grid>
+          <Grid item xs={6}>
+            <Calendar
+              maxDetail="month"
+              minDetail="decade"
             />
-          </div>
-        </div>
-        {this.state.invalidDateRange ? (
-          <div style={{ color: '#dc3545', paddingTop: 10 }}>
-            Invalid date range, Please select a valid date range.
-{" "}
-          </div>
-        ) : (
-          ''
-        )}
-        <RaisedButton
-          primary
-          style={{
-            marginTop: 10,
-            marginBottom: 10,
-            float: 'right',
-          }}
-          disabled={this.state.invalidDateRange}
-          onClick={this.publishCustomTimeRange}
-        >
-          Apply
-        </RaisedButton>
+          </Grid>
+        </Grid>
       </div>
+
+
+      // {/* 
+      //     {<DateTimePicker
+      //       onChange={this.handleStartTimeChange}
+      //       inputType={inputType}
+      //       theme={theme}
+      //       initTime={Moment().subtract(1, 'days')}
+      //       inputName="startTime"
+      //     />}
+      //     <DateTimePicker
+      //       onChange={this.handleEndTimeChange}
+      //       inputType={inputType}
+      //       theme={theme}
+      //       initTime={Moment()}
+      //       inputName="endTime"
+      //       startTime={this.startTime}
+      //     /> */}
+
+      //         {
+      //       this.state.invalidDateRange ? (
+      //         <div style={{ color: '#dc3545', paddingTop: 10 }}>
+      //           Invalid date range, Please select a valid date range.
+      // {" "}
+      //         </div>
+      //       ) : (
+      //         ''
+      //       )
+      //     }
+      // {/* < RaisedButton
+      //       primary
+      //       style={{
+      //         marginTop: 10,
+      //         marginBottom: 10,
+      //         float: 'right',
+      //       }
+      //       }
+      //       disabled={this.state.invalidDateRange}
+      //       onClick={this.publishCustomTimeRange}
+      //     >
+      //       Apply
+      //     </RaisedButton> */}
+
     );
   }
 }
