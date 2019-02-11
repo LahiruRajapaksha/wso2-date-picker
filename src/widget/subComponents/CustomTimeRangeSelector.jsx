@@ -21,7 +21,8 @@ import React from 'react';
 import { MenuItem } from '@material-ui/core/MenuItem';
 import Moment from "moment";
 import { Grid } from '@material-ui/core';
-import Calendar from 'react-calendar';
+import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
+import '../../../node_modules/rc-calendar/assets/index.css'
 export default class CustomTimeRangeSelector extends React.Component {
   constructor(props) {
     super(props);
@@ -35,17 +36,9 @@ export default class CustomTimeRangeSelector extends React.Component {
       .subtract(1, 'days')
       .toDate();
     this.endTime = new Date();
-    this.handleStartTimeChange = this.handleStartTimeChange.bind(this);
-    this.handleEndTimeChange = this.handleEndTimeChange.bind(this);
-    this.generateGranularityMenuItems = this.generateGranularityMenuItems.bind(
-      this,
-    );
-    this.getSelectedGranularities = this.getSelectedGranularities.bind(this);
-    this.getDefaultGranularity = this.getDefaultGranularity.bind(this);
-    this.publishCustomTimeRange = this.publishCustomTimeRange.bind(this);
   }
 
-  getDefaultGranularity() {
+  getDefaultGranularity = () => {
     const { options } = this.props;
     const minGranularity = options.availableGranularities || 'From Second';
     let defaultGranularity = '';
@@ -74,7 +67,7 @@ export default class CustomTimeRangeSelector extends React.Component {
     return defaultGranularity;
   }
 
-  getSelectedGranularities() {
+  getSelectedGranularities = () => {
     const { options } = this.props;
     let granularities = [];
     const minGranularity = options.availableGranularities || 'From Second';
@@ -103,7 +96,7 @@ export default class CustomTimeRangeSelector extends React.Component {
     return granularities;
   }
 
-  handleStartTimeChange(date) {
+  handleStartTimeChange = (date) => {
     this.startTime = date;
     if (
       Moment(this.startTime, 'YYYY-MM-DD HH:mm:ss.000').unix()
@@ -115,7 +108,7 @@ export default class CustomTimeRangeSelector extends React.Component {
     }
   }
 
-  handleEndTimeChange(date) {
+  handleEndTimeChange = (date) => {
     this.endTime = date;
     if (
       Moment(this.startTime, 'YYYY-MM-DD HH:mm:ss.000').unix()
@@ -127,17 +120,22 @@ export default class CustomTimeRangeSelector extends React.Component {
     }
   }
 
-  generateGranularityMenuItems() {
+  generateGranularityMenuItems = () => {
     return this.getSelectedGranularities().map(view => (
       <MenuItem value={view.toLowerCase()} primaryText={view} />
     ));
   }
 
-  publishCustomTimeRange() {
+  publishCustomTimeRang = () => {
     const { handleClose, onChangeCustom } = this.props;
     const { inputType } = this.state;
     handleClose();
     onChangeCustom('custom', this.startTime, this.endTime, inputType);
+  }
+
+
+  handleRangeChange = (range) => {
+    console.log(range);
   }
 
   const
@@ -146,20 +144,10 @@ export default class CustomTimeRangeSelector extends React.Component {
     const { theme } = this.props;
     return (
       <div style={{ fontSize: 13 }}>
-        <Grid container xs={12}>
-          <Grid item xs={6}>
-            <Calendar selectRange='true'
-              maxDetail="month"
-              minDetail="decade"
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Calendar
-              maxDetail="month"
-              minDetail="decade"
-            />
-          </Grid>
-        </Grid>
+        <RangeCalendar
+          showToday={false}
+          showDateInput={false}
+        />
       </div>
 
 

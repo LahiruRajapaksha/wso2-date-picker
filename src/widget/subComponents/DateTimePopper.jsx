@@ -44,7 +44,10 @@ export class DateTimePopper extends Component {
             <span>Custom range </span>
             <Grid item style={{ margin: 2, padding: 2 }}>
               {customRangeButtons.map(customRangeButton =>
-                <Button size="small" style={{ fontSize: 10 }}>{customRangeButton}</Button>
+                <Button size="small" style={{ fontSize: 10 }}
+                >
+                  {customRangeButton}
+                </Button>
               )}
             </Grid>
             <Grid item>
