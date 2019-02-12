@@ -24,19 +24,16 @@ import { Grid } from '@material-ui/core';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import '../../../node_modules/rc-calendar/assets/index.css'
 export default class CustomTimeRangeSelector extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      inputType: this.getDefaultGranularity(),
-      invalidDateRange: false,
-    };
+  state = {
+    inputType: this.getDefaultGranularity,
+    invalidDateRange: false,
+  };
 
-    this.startTime = Moment()
-      .subtract(1, 'days')
-      .toDate();
-    this.endTime = new Date();
-  }
+  startTime = Moment()
+    .subtract(1, 'days')
+    .toDate();
+  endTime = new Date();
 
   getDefaultGranularity = () => {
     const { options } = this.props;
@@ -126,27 +123,35 @@ export default class CustomTimeRangeSelector extends React.Component {
     ));
   }
 
-  publishCustomTimeRang = () => {
+  publishCustomTimeRange = () => {
     const { handleClose, onChangeCustom } = this.props;
     const { inputType } = this.state;
     handleClose();
     onChangeCustom('custom', this.startTime, this.endTime, inputType);
   }
 
+  customTimeRangeGranularityChange = (customGranularityMode) => {
+    this.setState()
+
+  }
 
   handleRangeChange = (range) => {
     console.log(range);
   }
 
+
   const
   render() {
     const { inputType } = this.state;
     const { theme } = this.props;
+    const calendarMode = this.props.calendarMode;
     return (
       <div style={{ fontSize: 13 }}>
         <RangeCalendar
           showToday={false}
           showDateInput={false}
+          onChange={this.handleRangeChange}
+          mode={[calendarMode, calendarMode]}
         />
       </div>
 

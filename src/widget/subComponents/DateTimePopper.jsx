@@ -3,16 +3,33 @@ import { Popover, Grid, Button, Paper } from '@material-ui/core';
 import CustomTimeRangeSelector from './CustomTimeRangeSelector';
 
 export class DateTimePopper extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      granularityModeValue: 'none',
+
+  state = {
+    granularityModeValue: 'none',
+    calendarMode: 'date'
+  }
+
+  changeCalendarMode = (calendarMode) => {
+    console.log('CalendarMode in funcion', calendarMode)
+
+    switch (calendarMode) {
+      case 'Day':
+        this.setState({ calendarMode: 'date' });
+        break;
+      case 'Month':
+        this.setState({ calendarMode: 'month' });
+        break;
+      case 'Year':
+        this.setState({ calendarMode: 'year' });
+        break;
+      default:
+      //Do nothing
     }
   }
 
   render() {
     const quickRangeButtons = ['1 Min', '15 Min', '1 Hour', '1 Day', '7 Days', '1 Month', '3 Months', '6 Months', '1 Year']
-    const customRangeButtons = ['Second', 'Minute', 'Hour', 'Day', 'Month', 'year']
+    const customRangeButtons = ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year']
     return (
       <Popover
         id={"popper"}
@@ -43,18 +60,23 @@ export class DateTimePopper extends Component {
           <Grid item xs={9}>
             <span>Custom range </span>
             <Grid item style={{ margin: 2, padding: 2 }}>
-              {customRangeButtons.map(customRangeButton =>
-                <Button size="small" style={{ fontSize: 10 }}
-                >
-                  {customRangeButton}
-                </Button>
-              )}
+              {
+                customRangeButtons.map(customRangeButton =>
+                  <Button
+                    size="small"
+                    style={{ fontSize: 10 }}
+                    onClick={() => this.changeCalendarMode(customRangeButton)}
+                  >
+                    {customRangeButton}
+                  </Button>
+                )}
             </Grid>
             <Grid item>
               <CustomTimeRangeSelector
                 options={this.props.options}
                 theme={this.props.muiTheme}
-                onChangeCustom={this.props.onChangeCustom} />
+                onChangeCustom={this.props.onChangeCustom}
+                calendarMode={this.state.calendarMode} />
             </Grid>
             <Grid item xs={9}>
               <Paper>Time</Paper>

@@ -31,9 +31,6 @@ export default class DateTimePicker extends React.Component {
       time: this.props.initTime.format('HH:mm:ss.000')
     };
 
-    this.generateDays = this.generateDays.bind(this);
-    this.generateMonths = this.generateMonths.bind(this);
-    this.generateYears = this.generateYears.bind(this);
   }
 
   getTimeStep(inputType) {
@@ -66,7 +63,7 @@ export default class DateTimePicker extends React.Component {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
   }
 
-  generateDays(year, month, inputName, startTime) {
+  generateDays = (year, month, inputName, startTime) => {
     const dayComponents = [];
     let days = 0;
 
@@ -111,7 +108,7 @@ export default class DateTimePicker extends React.Component {
     return dayComponents;
   }
 
-  generateMonths(inputName, startTime) {
+  generateMonths = (inputName, startTime) => {
     const monthComponents = [];
     const monthArray = [
       'January',
@@ -168,7 +165,7 @@ export default class DateTimePicker extends React.Component {
     return monthComponents;
   }
 
-  generateYears(inputName, startTime) {
+  generateYears = (inputName, startTime) => {
     const yearArray = [];
 
     if (inputName === 'startTime') {
@@ -235,8 +232,8 @@ export default class DateTimePicker extends React.Component {
     const { year, month, days } = this.state;
     let { time } = this.state;
     const {
- inputType, theme, inputName, startTime 
-} = this.props;
+      inputType, theme, inputName, startTime
+    } = this.props;
 
     switch (inputType) {
       case 'hour':
@@ -258,25 +255,25 @@ export default class DateTimePicker extends React.Component {
           {['year', 'month', 'day', 'hour', 'minute', 'second'].indexOf(
             inputType
           ) > -1 ? (
-            <SelectField
-              value={year}
-              onChange={(event, index, value) => {
-                this.handleOnChange('year', value);
-              }}
-            >
-              {this.generateYears(inputName, startTime)}
-            </SelectField>
+              <SelectField
+                value={year}
+                onChange={(event, index, value) => {
+                  this.handleOnChange('year', value);
+                }}
+              >
+                {this.generateYears(inputName, startTime)}
+              </SelectField>
             ) : null}
           {['month', 'day', 'hour', 'minute', 'second'].indexOf(inputType)
-          > -1 ? (
-            <SelectField
-              value={month}
-              onChange={(event, index, value) => {
-                this.handleOnChange('month', value);
-              }}
-            >
-              {this.generateMonths(inputName, startTime)}
-            </SelectField>
+            > -1 ? (
+              <SelectField
+                value={month}
+                onChange={(event, index, value) => {
+                  this.handleOnChange('month', value);
+                }}
+              >
+                {this.generateMonths(inputName, startTime)}
+              </SelectField>
             ) : null}
           {['day', 'hour', 'minute', 'second'].indexOf(inputType) > -1 ? (
             <SelectField

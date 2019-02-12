@@ -90,63 +90,6 @@ export default class MyWidget extends Widget {
       anchorEl: null,
     };
 
-    this.publishTimeRange = this.publishTimeRange.bind(this);
-    this.getDateTimeRangeInfo = this.getDateTimeRangeInfo.bind(this);
-    this.handleGranularityChange = this.handleGranularityChange.bind(this);
-    this.handleGranularityChangeForCustom = this.handleGranularityChangeForCustom.bind(
-      this
-    );
-    this.getTimeIntervalDescriptor = this.getTimeIntervalDescriptor.bind(this);
-    this.getStartTimeAndEndTimeForTimeIntervalDescriptor = this.getStartTimeAndEndTimeForTimeIntervalDescriptor.bind(
-      this
-    );
-    this.generateGranularitySelector = this.generateGranularitySelector.bind(
-      this
-    );
-    this.OnChangeOfSelectField = this.OnChangeOfSelectField.bind(this);
-    this.verifySelectedGranularityForCustom = this.verifySelectedGranularityForCustom.bind(
-      this
-    );
-    this.onChangeForFixedTimeRange = this.onChangeForFixedTimeRange.bind(this);
-    this.onChangeForCustomTimeRange = this.onChangeForCustomTimeRange.bind(
-      this
-    );
-    this.getStartTimeAndGranularity = this.getStartTimeAndGranularity.bind(
-      this
-    );
-    this.capitalizeCaseFirstChar = this.capitalizeCaseFirstChar.bind(this);
-    this.generateGranularityMenuItems = this.generateGranularityMenuItems.bind(
-      this
-    );
-    this.getSupportedTimeRanges = this.getSupportedTimeRanges.bind(this);
-    this.getAvailableGranularities = this.getAvailableGranularities.bind(this);
-    this.getSupportedGranularitiesForFixed = this.getSupportedGranularitiesForFixed.bind(
-      this
-    );
-    this.getSupportedGranularitiesForCustom = this.getSupportedGranularitiesForCustom.bind(
-      this
-    );
-    this.verifyDefaultGranularityOfTimeRange = this.verifyDefaultGranularityOfTimeRange.bind(
-      this
-    );
-    this.getDefaultTimeRange = this.getDefaultTimeRange.bind(this);
-    this.loadDefaultTimeRange = this.loadDefaultTimeRange.bind(this);
-    this.loadUserSpecifiedCustomTimeRange = this.loadUserSpecifiedCustomTimeRange.bind(
-      this
-    );
-    this.loadUserSpecifiedTimeRange = this.loadUserSpecifiedTimeRange.bind(
-      this
-    );
-    this.getTimeRangeName = this.getTimeRangeName.bind(this);
-    this.formatTimeRangeDetails = this.formatTimeRangeDetails.bind(this);
-    this.getDateTimeFormat = this.getDateTimeFormat.bind(this);
-    this.timestampToDateFormat = this.timestampToDateFormat.bind(this);
-    this.getStandardDateTimeFormat = this.getStandardDateTimeFormat.bind(this);
-    this.autoSyncClick = this.autoSyncClick.bind(this);
-    this.setRefreshInterval = this.setRefreshInterval.bind(this);
-    this.clearRefreshInterval = this.clearRefreshInterval.bind(this);
-    this.setQueryParamToURL = this.setQueryParamToURL.bind(this);
-
     if (this.props.glContainer != undefined) {
       this.props.glContainer.on("resize", () =>
         this.setState({
@@ -173,17 +116,17 @@ export default class MyWidget extends Widget {
     this.setState({ snackBar });
   }
 
-  publishTimeRange(message) {
+  publishTimeRange = (message) => {
     console.log('message', message)
     super.publish(message);
     this.snackBarPreview(message);
   }
 
-  getDateTimeRangeInfo() {
+  getDateTimeRangeInfo = () => {
     return super.getGlobalState("dtrp");
   }
 
-  handleGranularityChange(mode) {
+  handleGranularityChange = (mode) => {
     this.clearRefreshInterval();
     let granularity = "";
     console.log('mode', mode)
@@ -207,7 +150,7 @@ export default class MyWidget extends Widget {
     }
   }
 
-  handleGranularityChangeForCustom(mode, startTime, endTime, granularity) {
+  handleGranularityChangeForCustom = (mode, startTime, endTime, granularity) => {
     this.clearRefreshInterval();
     this.publishTimeRange({
       granularity,
@@ -222,7 +165,7 @@ export default class MyWidget extends Widget {
     });
   }
 
-  getStartTimeAndGranularity(mode) {
+  getStartTimeAndGranularity = (mode) => {
     let granularity = "";
     let startTime = null;
 
@@ -287,7 +230,7 @@ export default class MyWidget extends Widget {
     return { startTime, granularity };
   }
 
-  verifyDefaultGranularityOfTimeRange(granularity) {
+  verifyDefaultGranularityOfTimeRange = (granularity) => {
     const availableGranularities = this.getAvailableGranularities();
     if (
       availableGranularities.indexOf(
@@ -299,7 +242,7 @@ export default class MyWidget extends Widget {
     return availableGranularities[0].toLowerCase();
   }
 
-  getDefaultTimeRange() {
+  getDefaultTimeRange = () => {
     const { options } = this.state;
     const defaultTimeRange = options.defaultValue || "3 Months";
     const minGranularity = options.availableGranularities || "From Second";
@@ -356,7 +299,7 @@ export default class MyWidget extends Widget {
     return availableViews[0];
   }
 
-  loadDefaultTimeRange() {
+  loadDefaultTimeRange = () => {
     const dateTimeRangeInfo = this.getDateTimeRangeInfo();
     if (dateTimeRangeInfo.tr) {
       if (dateTimeRangeInfo.tr.toLowerCase() === "custom") {
@@ -398,7 +341,7 @@ export default class MyWidget extends Widget {
     }
   }
 
-  loadUserSpecifiedCustomTimeRange(start, end, granularity) {
+  loadUserSpecifiedCustomTimeRange = (start, end, granularity) => {
     const startAndEndTime = this.formatTimeRangeDetails(start, end);
     if (startAndEndTime != null) {
       this.clearRefreshInterval();
@@ -427,7 +370,7 @@ export default class MyWidget extends Widget {
     }
   }
 
-  loadUserSpecifiedTimeRange(range, granularity) {
+  loadUserSpecifiedTimeRange = (range, granularity) => {
     const timeRange = this.getTimeRangeName(range);
     if (timeRange.length > 0) {
       const supportedTimeRanges = this.getSupportedTimeRanges();
@@ -482,7 +425,7 @@ export default class MyWidget extends Widget {
     }
   }
 
-  getTimeRangeName(timeRange) {
+  getTimeRangeName = (timeRange) => {
     let name = "";
     if (timeRange) {
       const rangeParts = timeRange.toLowerCase().match(/[0-9]+|[a-z]+/g) || [];
@@ -523,7 +466,7 @@ export default class MyWidget extends Widget {
     return name;
   }
 
-  formatTimeRangeDetails(startTime, endTime) {
+  formatTimeRangeDetails = (startTime, endTime) => {
     let start = null;
     let end = null;
     let result = null;
@@ -541,7 +484,7 @@ export default class MyWidget extends Widget {
     return result;
   }
 
-  getDateTimeFormat(dateTime) {
+  getDateTimeFormat = (dateTime) => {
     const dateTimeParts = dateTime.split(" ");
 
     let timeFormat = null;
@@ -606,7 +549,7 @@ export default class MyWidget extends Widget {
     return null;
   }
 
-  timestampToDateFormat(timestamp, granularityMode) {
+  timestampToDateFormat = (timestamp, granularityMode) => {
     const format = this.getStandardDateTimeFormat(granularityMode);
     if (format.length > 0) {
       return Moment.unix(timestamp).format(format);
@@ -614,7 +557,7 @@ export default class MyWidget extends Widget {
     return "";
   }
 
-  getStandardDateTimeFormat(granularityMode) {
+  getStandardDateTimeFormat = (granularityMode) => {
     granularityMode = granularityMode.toLowerCase();
     let format = "";
     if (granularityMode.indexOf("second") > -1) {
@@ -706,7 +649,7 @@ export default class MyWidget extends Widget {
     }
 
   }
-  getTimeIntervalDescriptor(granularityMode) {
+  getTimeIntervalDescriptor = (granularityMode) => {
     let startAndEnd = {
       startTime: null,
       endTime: null
@@ -784,7 +727,7 @@ export default class MyWidget extends Widget {
     return null;
   }
 
-  getStartTimeAndEndTimeForTimeIntervalDescriptor(granularityMode) {
+  getStartTimeAndEndTimeForTimeIntervalDescriptor = (granularityMode) => {
     let startTime = null;
     let endTime = null;
 
@@ -849,7 +792,7 @@ export default class MyWidget extends Widget {
     return { startTime, endTime };
   }
 
-  generateGranularitySelector() {
+  generateGranularitySelector = () => {
     return (
       <Select
         value={this.getDefaultSelectedOption()}
@@ -920,7 +863,7 @@ export default class MyWidget extends Widget {
     return defaultSelectedGranularity[defaultSelectedGranularity.length - 2].toLowerCase()
   }
 
-  verifySelectedGranularityForCustom(granularity) {
+  verifySelectedGranularityForCustom = (granularity) => {
     if (
       this.getSupportedGranularitiesForCustom(
         this.state.startTime,
@@ -932,7 +875,7 @@ export default class MyWidget extends Widget {
     return "";
   }
 
-  onChangeForFixedTimeRange(value) {
+  onChangeForFixedTimeRange = (value) => {
     this.publishTimeRange({
       granularity: value,
       from: this.state.startTime.getTime(),
@@ -941,7 +884,7 @@ export default class MyWidget extends Widget {
     this.setState({ granularityValue: value });
   }
 
-  onChangeForCustomTimeRange(value) {
+  onChangeForCustomTimeRange = (value) => {
     this.publishTimeRange({
       granularity: value,
       from: Moment(this.state.startTime)
@@ -959,7 +902,7 @@ export default class MyWidget extends Widget {
     this.setState({ granularityMode })
   }
 
-  generateGranularityMenuItems() {
+  generateGranularityMenuItems = () => {
     const { granularityMode } = this.state
     let supportedGranularities = [];
     if (this.state.granularityMode === "custom") {
@@ -982,7 +925,7 @@ export default class MyWidget extends Widget {
     );
   }
 
-  capitalizeCaseFirstChar(str) {
+  capitalizeCaseFirstChar = (str) => {
     let result = "";
     if (str) {
       result = str.charAt(0).toUpperCase() + str.slice(1);
@@ -990,7 +933,7 @@ export default class MyWidget extends Widget {
     return result;
   }
 
-  getSupportedTimeRanges() {
+  getSupportedTimeRanges = () => {
     const minGranularity =
       this.state.options.availableGranularities || "From Second";
     let timeRanges = [];
@@ -1042,7 +985,7 @@ export default class MyWidget extends Widget {
     return timeRanges;
   }
 
-  getAvailableGranularities() {
+  getAvailableGranularities = () => {
     const minGranularity =
       this.state.options.availableGranularities || "From Second";
     let granularities = [];
@@ -1071,7 +1014,7 @@ export default class MyWidget extends Widget {
     return granularities;
   }
 
-  getSupportedGranularitiesForFixed(granularityMode) {
+  getSupportedGranularitiesForFixed = (granularityMode) => {
     console.log('granularityMode', granularityMode)
     let supportedGranularities = [];
     switch (granularityMode) {
@@ -1107,7 +1050,7 @@ export default class MyWidget extends Widget {
     return supportedGranularities;
   }
 
-  getSupportedGranularitiesForCustom(startTime, endTime) {
+  getSupportedGranularitiesForCustom = (startTime, endTime) => {
     const start = Moment(startTime);
     const end = Moment(endTime);
     const supportedGranularities = [];
@@ -1133,7 +1076,7 @@ export default class MyWidget extends Widget {
     return supportedGranularities;
   }
 
-  autoSyncClick() {
+  autoSyncClick = () => {
     if (!this.state.enableSync) {
       this.setState(
         {
@@ -1151,7 +1094,7 @@ export default class MyWidget extends Widget {
     }
   }
 
-  setRefreshInterval() {
+  setRefreshInterval = () => {
     if (this.state.enableSync) {
       const refreshInterval =
         this.state.options.autoSyncInterval * 1000 || 10000;
@@ -1173,14 +1116,14 @@ export default class MyWidget extends Widget {
     }
   }
 
-  clearRefreshInterval() {
+  clearRefreshInterval = () => {
     clearInterval(this.state.refreshIntervalId);
     this.setState({
       refreshIntervalId: null
     });
   }
 
-  setQueryParamToURL(timeRange, startTime, endTime, granularity, autoSync) {
+  setQueryParamToURL = (timeRange, startTime, endTime, granularity, autoSync) => {
     super.setGlobalState("dtrp", {
       tr: timeRange,
       sd: startTime,
