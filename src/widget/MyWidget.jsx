@@ -151,6 +151,10 @@ export default class MyWidget extends Widget {
   }
 
   handleGranularityChangeForCustom = (mode, startTime, endTime, granularity) => {
+    console.log('Mode', mode)
+    console.log("startTime", startTime)
+    console.log("endTime", endTime)
+    console.log("granularity", granularity)
     this.clearRefreshInterval();
     this.publishTimeRange({
       granularity,
@@ -643,7 +647,7 @@ export default class MyWidget extends Widget {
           getDateTimeRangeInfo={this.getDateTimeRangeInfo}
           getTimeRangeName={this.getTimeRangeName}
           getDefaultTimeRange={this.getDefaultTimeRange}
-          savingPickedGranularity={this.savingPickedGranularity}
+          changeQuickRangeGranularities={this.changeQuickRangeGranularities}
         />
       )
     }
@@ -897,7 +901,7 @@ export default class MyWidget extends Widget {
     this.setState({ granularityValue: value });
   }
 
-  savingPickedGranularity = (granularityMode) => {
+  changeQuickRangeGranularities = (granularityMode) => {
     this.handleGranularityChange(granularityMode);
     this.setState({ granularityMode })
   }

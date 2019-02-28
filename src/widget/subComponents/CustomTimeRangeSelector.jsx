@@ -18,51 +18,57 @@
  */
 
 import React from 'react';
-import { MenuItem } from '@material-ui/core/MenuItem';
 import Moment from "moment";
-import { Grid } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
+import MonthCalendar from 'rc-calendar/lib/MonthCalendar'
 import '../../../node_modules/rc-calendar/assets/index.css'
+import TimePicker from './TimePicker';
+import { convertHexToRGB } from 'material-ui/utils/colorManipulator';
+import color from '@material-ui/core/colors/lightGreen';
+import { orange } from '@material-ui/core/colors';
 export default class CustomTimeRangeSelector extends React.Component {
 
   state = {
-    inputType: this.getDefaultGranularity,
+    // inputType: this.getDefaultGranularity,
     invalidDateRange: false,
+    customGranularityMode: 'second',
+    valueof: ''
   };
-
   startTime = Moment()
     .subtract(1, 'days')
     .toDate();
   endTime = new Date();
+  myref = React.createRef();
 
-  getDefaultGranularity = () => {
-    const { options } = this.props;
-    const minGranularity = options.availableGranularities || 'From Second';
-    let defaultGranularity = '';
-    switch (minGranularity) {
-      case 'From Second':
-        defaultGranularity = 'second';
-        break;
-      case 'From Minute':
-        defaultGranularity = 'minute';
-        break;
-      case 'From Hour':
-        defaultGranularity = 'hour';
-        break;
-      case 'From Day':
-        defaultGranularity = 'day';
-        break;
-      case 'From Month':
-        defaultGranularity = 'month';
-        break;
-      case 'From Year':
-        defaultGranularity = 'year';
-        break;
-      default:
-      // do nothing
-    }
-    return defaultGranularity;
-  }
+  // getDefaultGranularity = () => {
+  //   const { options } = this.props;
+  //   const minGranularity = options.availableGranularities || 'From Second';
+  //   let defaultGranularity = '';
+  //   switch (minGranularity) {
+  //     case 'From Second':
+  //       defaultGranularity = 'second';
+  //       break;
+  //     case 'From Minute':
+  //       defaultGranularity = 'minute';
+  //       break;
+  //     case 'From Hour':
+  //       defaultGranularity = 'hour';
+  //       break;
+  //     case 'From Day':
+  //       defaultGranularity = 'day';
+  //       break;
+  //     case 'From Month':
+  //       defaultGranularity = 'month';
+  //       break;
+  //     case 'From Year':
+  //       defaultGranularity = 'year';
+  //       break;
+  //     default:
+  //     // do nothing
+  //   }
+  //   return defaultGranularity;
+  // }
 
   getSelectedGranularities = () => {
     const { options } = this.props;
@@ -117,86 +123,149 @@ export default class CustomTimeRangeSelector extends React.Component {
     }
   }
 
-  generateGranularityMenuItems = () => {
-    return this.getSelectedGranularities().map(view => (
-      <MenuItem value={view.toLowerCase()} primaryText={view} />
-    ));
-  }
-
+  /*Publishing the custom time range
+  onChangeCustom()=>handleGranularityChangeForCustom(mode, startTime, endTime, granularity)
+  mode:custom
+  granularity:second,minute,hour,day,month,year
+  */
   publishCustomTimeRange = () => {
     const { handleClose, onChangeCustom } = this.props;
-    const { inputType } = this.state;
-    handleClose();
-    onChangeCustom('custom', this.startTime, this.endTime, inputType);
+    const { customGranularityMode } = this.state;
+    console.log('customGranularityMode', customGranularityMode)
+    // handleClose(); error saying this is not a function
+    onChangeCustom('custom', this.startTime, this.endTime, customGranularityMode);
   }
 
-  customTimeRangeGranularityChange = (customGranularityMode) => {
-    this.setState()
+  changeCustomRangeGranularity = (mode) => {
+    this.setState({
+      customGranularityMode: mode
+    })
+  }
+  setCustomDateRange = (dateRange) => {
+    this.startTime = dateRange[0].toDate()
+    this.endTime = dateRange[1].toDate()
+  }
+  setCustomMonthRange = (monthRange) => {
+    this.setState({
+      valueOf: monthRange[0]
+    })
+    console.log('ref', this.myref.current)
+    console.log('monthRange1', typeof monthRange)
+    console.log('monthRange2', monthRange)
 
   }
 
-  handleRangeChange = (range) => {
-    console.log(range);
+  showCalendarModes = () => {
+    const calendarMode = this.state.customGranularityMode
+    switch (calendarMode) {
+      case 'second':
+      case 'minute':
+      case 'hour':
+      case 'day':
+        return (
+          <RangeCalendar
+            mode={['date', 'date']}
+            showClear={true}
+            showToday={false}
+            onSelect={this.setCustomDateRange}
+          />
+        );
+        break;
+      case 'month':
+      case 'year':
+        return (
+          <RangeCalendar
+            mode={[calendarMode, calendarMode]}
+            showClear={true}
+            showToday={false}
+            onPanelChange={this.setCustomMonthRange}
+          />
+          // <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+          //   <MonthCalendar style={{ border: 0, }}
+          //     onSelect={this.setCustomMonthRange}
+          //   />
+          //   <MonthCalendar style={{ border: 0, }}
+
+          //   />
+          // </div>
+        );
+        break;
+    }
+
   }
 
-
-  const
   render() {
+    const customRangeButtons = ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year']
     const { inputType } = this.state;
-    const { theme } = this.props;
-    const calendarMode = this.props.calendarMode;
+    const customRangeContainer = {
+      display: 'flex',
+      flexDirection: 'column'
+    }
+    const customRangeButtonContainer = {
+      display: 'flex',
+    }
+    const customButtons = {
+      fontSize: 10,
+      margin: 5,
+      padding: 0.5,
+    }
+    const calendar = {
+      display: 'flex',
+    }
+    const timePicker = {
+      display: 'flex',
+      justifyContent: 'space-around',
+    }
+    const footerButtons = {
+      ...customButtons,
+      padding: 10
+    }
+
     return (
-      <div style={{ fontSize: 13 }}>
-        <RangeCalendar
-          showToday={false}
-          showDateInput={false}
-          onChange={this.handleRangeChange}
-          mode={[calendarMode, calendarMode]}
-        />
+      <div style={customRangeContainer} >
+        <div style={customRangeButtonContainer} >
+          {customRangeButtons.map((customRangeButtons, index) =>
+            <Button
+              key={index}
+              variant="outlined"
+              style={customButtons}
+              onClick={() => this.changeCustomRangeGranularity(customRangeButtons.toLocaleLowerCase())}
+            >
+              {customRangeButtons}
+            </Button>
+          )}
+        </div>
+        <div style={calendar} ref={this.myref}>
+          {this.showCalendarModes()}
+        </div>
+        <div style={timePicker}>
+          <TimePicker
+            onChange={this.handleStartTimeChange}
+            inputType={this.state.customGranularityMode}
+            initTime={Moment().subtract(1, 'days')}
+            inputName="startTime"
+            // theme={theme}
+            initTime={Moment().subtract(1, 'days')}
+          />
+          <TimePicker
+            onChange={this.handleStartTimeChange}
+            inputType={this.state.customGranularityMode}
+            initTime={Moment()}
+            inputName="endTime"
+            startTime={this.startTime}
+            // theme={theme}
+            initTime={Moment().subtract(1, 'days')}
+          />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button variant='outlined' style={footerButtons}
+            onClick={this.publishCustomTimeRange}
+          >
+            Apply
+          </Button>
+          <Button variant='outlined' style={footerButtons}>Cancel</Button>
+        </div>
       </div>
-
-
-      // {/* 
-      //     {<DateTimePicker
-      //       onChange={this.handleStartTimeChange}
-      //       inputType={inputType}
-      //       theme={theme}
-      //       initTime={Moment().subtract(1, 'days')}
-      //       inputName="startTime"
-      //     />}
-      //     <DateTimePicker
-      //       onChange={this.handleEndTimeChange}
-      //       inputType={inputType}
-      //       theme={theme}
-      //       initTime={Moment()}
-      //       inputName="endTime"
-      //       startTime={this.startTime}
-      //     /> */}
-
-      //         {
-      //       this.state.invalidDateRange ? (
-      //         <div style={{ color: '#dc3545', paddingTop: 10 }}>
-      //           Invalid date range, Please select a valid date range.
-      // {" "}
-      //         </div>
-      //       ) : (
-      //         ''
-      //       )
-      //     }
-      // {/* < RaisedButton
-      //       primary
-      //       style={{
-      //         marginTop: 10,
-      //         marginBottom: 10,
-      //         float: 'right',
-      //       }
-      //       }
-      //       disabled={this.state.invalidDateRange}
-      //       onClick={this.publishCustomTimeRange}
-      //     >
-      //       Apply
-      //     </RaisedButton> */}
-
     );
   }
 }
