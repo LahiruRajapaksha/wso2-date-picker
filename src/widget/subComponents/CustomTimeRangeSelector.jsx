@@ -33,49 +33,18 @@ export default class CustomTimeRangeSelector extends React.Component {
     // inputType: this.getDefaultGranularity,
     invalidDateRange: false,
     customGranularityMode: 'second',
-    valueof: ''
   };
   startTime = Moment()
     .subtract(1, 'days')
     .toDate();
   endTime = new Date();
-  myref = React.createRef();
-
-  // getDefaultGranularity = () => {
-  //   const { options } = this.props;
-  //   const minGranularity = options.availableGranularities || 'From Second';
-  //   let defaultGranularity = '';
-  //   switch (minGranularity) {
-  //     case 'From Second':
-  //       defaultGranularity = 'second';
-  //       break;
-  //     case 'From Minute':
-  //       defaultGranularity = 'minute';
-  //       break;
-  //     case 'From Hour':
-  //       defaultGranularity = 'hour';
-  //       break;
-  //     case 'From Day':
-  //       defaultGranularity = 'day';
-  //       break;
-  //     case 'From Month':
-  //       defaultGranularity = 'month';
-  //       break;
-  //     case 'From Year':
-  //       defaultGranularity = 'year';
-  //       break;
-  //     default:
-  //     // do nothing
-  //   }
-  //   return defaultGranularity;
-  // }
 
   getSelectedGranularities = () => {
     const { options } = this.props;
     let granularities = [];
     const minGranularity = options.availableGranularities || 'From Second';
     switch (minGranularity) {
-      case 'From Second':
+      case 'From Second': this.state.monthRange[0], this.state.monthRange[1]
         granularities = ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'];
         break;
       case 'From Minute':
@@ -132,29 +101,43 @@ export default class CustomTimeRangeSelector extends React.Component {
     const { handleClose, onChangeCustom } = this.props;
     const { customGranularityMode } = this.state;
     console.log('customGranularityMode', customGranularityMode)
-    // handleClose(); error saying this is not a function
+    handleClose()
     onChangeCustom('custom', this.startTime, this.endTime, customGranularityMode);
   }
 
+  /**
+   * Change the granularity by setting the state
+   * @param {String} mode:'second','minute', 'hour',etc
+   */
   changeCustomRangeGranularity = (mode) => {
     this.setState({
       customGranularityMode: mode
     })
   }
+
+  /**
+   * Setting the date range which is selected form the calendar
+   * @param {moment} dateRange
+   */
   setCustomDateRange = (dateRange) => {
     this.startTime = dateRange[0].toDate()
     this.endTime = dateRange[1].toDate()
   }
-  setCustomMonthRange = (monthRange) => {
-    this.setState({
-      valueOf: monthRange[0]
-    })
-    console.log('ref', this.myref.current)
-    console.log('monthRange1', typeof monthRange)
-    console.log('monthRange2', monthRange)
 
+  /**
+   * Assigning the months to the start and end dates
+   * @param {moment} month
+   */
+  setCustomMonthRange = (monthRange) => {
+    this.startTime = new Date(monthRange[0].year(), monthRange[0].month())
+    this.endTime = new Date(monthRange[1].year(), monthRange[1].month())
   }
 
+  /**
+   * Displaying the calender according to granularity :'second','minute' etc
+   * Date calendar will show only for 'second','minute','hour','day' granularities
+   * Month and year calendar show according to month and year granularities respectively
+   */
   showCalendarModes = () => {
     const calendarMode = this.state.customGranularityMode
     switch (calendarMode) {
@@ -180,14 +163,6 @@ export default class CustomTimeRangeSelector extends React.Component {
             showToday={false}
             onPanelChange={this.setCustomMonthRange}
           />
-          // <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          //   <MonthCalendar style={{ border: 0, }}
-          //     onSelect={this.setCustomMonthRange}
-          //   />
-          //   <MonthCalendar style={{ border: 0, }}
-
-          //   />
-          // </div>
         );
         break;
     }
@@ -258,12 +233,19 @@ export default class CustomTimeRangeSelector extends React.Component {
           />
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button variant='outlined' style={footerButtons}
+          <Button
+            variant='outlined' style={footerButtons}
             onClick={this.publishCustomTimeRange}
           >
             Apply
           </Button>
-          <Button variant='outlined' style={footerButtons}>Cancel</Button>
+          <Button
+            variant='outlined'
+            style={footerButtons}
+            onClick={this.props.handleClose}
+          >
+            Cancel
+          </Button>
         </div>
       </div>
     );

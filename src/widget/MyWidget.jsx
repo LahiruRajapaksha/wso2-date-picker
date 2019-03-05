@@ -31,11 +31,9 @@ import Moment from "moment";
 import { Scrollbars } from "react-custom-scrollbars";
 import JssProvider from "react-jss/lib/JssProvider";
 import { Snackbar } from "material-ui";
-import { oldDark, oldLight } from "../theme/Theme";
 import Widget from "../../mocking/Widget";
 import DateRange from '@material-ui/icons/DateRange'
 import widgetConf from "../../resources/widgetConf.json";
-import { red, grey } from "@material-ui/core/colors";
 import { Button } from "@material-ui/core";
 import DateTimePopper from "./subComponents/DateTimePopper";
 
@@ -154,7 +152,7 @@ export default class MyWidget extends Widget {
     console.log('Mode', mode)
     console.log("startTime", startTime)
     console.log("endTime", endTime)
-    console.log("granularity", granularity)
+    console.log("granularity", startTime)
     this.clearRefreshInterval();
     this.publishTimeRange({
       granularity,
@@ -705,7 +703,6 @@ export default class MyWidget extends Widget {
             }}
           >
             <Button
-              // aria-owns={open ? "popper" : undefined}
               onClick={this.popoverHandler}
               style={{ color: 'white  ' }}
             >
@@ -925,7 +922,6 @@ export default class MyWidget extends Widget {
       >{view}
       </MenuItem>
     }
-
     );
   }
 

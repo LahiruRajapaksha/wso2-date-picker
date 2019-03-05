@@ -18,7 +18,6 @@
  */
 
 import React from 'react';
-import { MenuItem, SelectField } from 'material-ui';
 import moment from 'moment';
 
 export default class TimePicker extends React.Component {

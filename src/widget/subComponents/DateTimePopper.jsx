@@ -12,6 +12,7 @@ export class DateTimePopper extends Component {
   }
 
   render() {
+    const { onChangeCustom, onClose } = this.props
     const quickRangeButtons = ['1 Min', '15 Min', '1 Hour', '1 Day', '7 Days', '1 Month', '3 Months', '6 Months', '1 Year']
     return (
       <Popover
@@ -52,7 +53,8 @@ export class DateTimePopper extends Component {
           <Grid item xs={10}>
             <Typography style={{ fontSize: 14, padding: 0.5, margin: 4 }}>Custom Ranges</Typography>
             <CustomTimeRangeSelector
-              onChangeCustom={this.props.onChangeCustom}
+              onChangeCustom={onChangeCustom}
+              handleClose={onClose}
             />
           </Grid>
         </Grid>
